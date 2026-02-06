@@ -115,7 +115,7 @@
 <body>
 
     <div id="game-container">
-        <div id="card-visual" class="card-display" style="background-image: url('reverso.png');"></div>
+        <div id="card-visual" class="card-display" style="background-image: url('https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/reverso.png');"></div>
         
         <div id="info-box" style="min-height: 150px;">
             <div id="rarity" class="rarity-tag" style="display:none;"></div>
@@ -134,34 +134,54 @@
         // CONFIGURACIÓN DE TUS CARTAS
         // Aquí es donde añades tus imágenes de GitHub y textos
         const cartas = [
-            { nombre: "Rata de Alcantarilla", rareza: "N", img: "cartas/n_rata.png", desc: "No subestimes su mordisco." },
-            { nombre: "Escudo de Madera", rareza: "N", img: "cartas/n_escudo.png", desc: "Mejor que nada es." },
-            { nombre: "Guerrero Novato", rareza: "R", img: "cartas/r_guerrero.png", desc: "Tiene ganas, pero le falta práctica." },
-            { nombre: "Poción Prohibida", rareza: "SR", img: "cartas/sr_pocion.png", desc: "Te da fuerza, pero a qué coste." },
-            { nombre: "Fénix de Fuego", rareza: "SSR", img: "cartas/ssr_fenix.png", desc: "Renace de sus cenizas cada martes." },
-            { nombre: "DRAGÓN SUPREMO", rareza: "UR", img: "cartas/ur_dragon.png", desc: "El soberano de todos los cielos." }
+            { nombre: "Uso Extra", rareza: "N", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/N_UsoExtra.png", desc: "Puedes usar 1 objeto curativo adicional en un combate (además de los permitidos normalmente)." },
+            { nombre: "Segundo Aliento", rareza: "R", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/R_SegundoAliento.png", desc: "Si un Pokémon cae en el próximo combate, no muere, debe usarse antes de empezar el combate." },
+            { nombre: "Reemplazo Legal", rareza: "SR", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/SR_ReemplazoLegal.png", desc: "Puedes desechar la captura de una ruta y volver a capturar un Pokémon extra en la misma ruta." },
+            { nombre: "Intercambio Permitido", rareza: "SSR", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/SSR_IntercambioPermitido.png", desc: "Puedes cambiar un Pokémon muerto por otro de la caja y este último queda muerto para siempre (no puede revivir con ninguna carta)." },
+            { nombre: "Ceniza de Ho-Oh", rareza: "UR", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/UR_CenizadeHo-Oh.png", desc: "Puedes revivir 1 Pokémon muerto. Solo puede activarse una vez en toda la run. Si vuelve a salirte esta carta roba otra." },
+            { nombre: "Sin Mochila", rareza: "N", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/N_SinMochila.png", desc: "En el próximo combate no puedes usar objetos consumibles." },
+            { nombre: "Inicio Forzado", rareza: "R", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/R_InicioForzado.png", desc: "El próximo combate debe empezarlo el primer Pokémon del equipo, aunque no quieras (puedes cambiar una vez que salga)." },
+            { nombre: "Destino Inapelable", rareza: "SR", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/SR_DestinoInapelable.png", desc: "La próxima muerte es definitiva, el pokémon muerto no puede ser salvado por ninguna carta." },
+            { nombre: "Ruina Gradual", rareza: "SSR", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/SSR_RuinaGradual.png", desc: "Durante el próximo gimnasio con cada combate con un súbdito pierde un espacio del equipo hasta ganar al líder. En caso de estar en liga pokémon esta carta elimina un espacio cada 2 altos mandos." },
+            { nombre: "Mano Vacía", rareza: "UR", img: "https://github.com/notpikachuarmy/Cardlocke/blob/main/cartas/UR_ManoVac%C3%ADa.png", desc: "Descarta todas las cartas guardadas excepto una (la que tú elijas), esto afecta también a las cartas negativas activas." }
         ];
 
         // Función para sacar carta aleatoria
         function sacarCarta() {
-            const visual = document.getElementById('card-visual');
-            visual.style.transform = "rotateY(90deg)"; // Efecto giro simple
-            
-            setTimeout(() => {
-                const carta = cartas[Math.floor(Math.random() * cartas.length)];
-                
-                visual.style.backgroundImage = `url('${carta.img}')`;
-                visual.style.transform = "rotateY(0deg)";
-                
-                const rTag = document.getElementById('rarity');
-                rTag.innerText = carta.rareza;
-                rTag.className = `rarity-tag ${carta.rareza}`;
-                rTag.style.display = "inline-block";
-                
-                document.getElementById('card-name').innerText = carta.nombre;
-                document.getElementById('card-desc').innerText = carta.desc;
-            }, 200);
-        }
+    const visual = document.getElementById('card-visual');
+    visual.style.transform = "rotateY(90deg)"; 
+
+    setTimeout(() => {
+        // 1. Generar un número del 1 al 100
+        const azar = Math.floor(Math.random() * 100) + 1;
+        let rarezaElegida;
+
+        // 2. Determinar rareza según el número
+        if (azar <= 50) { rarezaElegida = "N"; }        // 1 al 50
+        else if (azar <= 80) { rarezaElegida = "R"; }   // 51 al 80
+        else if (azar <= 94) { rarezaElegida = "SR"; }  // 81 al 94
+        else if (azar <= 99) { rarezaElegida = "SSR"; } // 95 al 99
+        else { rarezaElegida = "UR"; }                  // 100
+
+        // 3. Filtrar todas las cartas que tengan esa rareza
+        const posiblesCartas = cartas.filter(c => c.rareza === rarezaElegida);
+        
+        // 4. Elegir una al azar de ese grupo (por si tienes varias N, varias R, etc.)
+        const carta = posiblesCartas[Math.floor(Math.random() * posiblesCartas.length)];
+
+        // 5. Mostrar en pantalla (Igual que antes)
+        visual.style.backgroundImage = `url('${carta.img}')`;
+        visual.style.transform = "rotateY(0deg)";
+        
+        const rTag = document.getElementById('rarity');
+        rTag.innerText = carta.rareza;
+        rTag.className = `rarity-tag ${carta.rareza}`;
+        rTag.style.display = "inline-block";
+        
+        document.getElementById('card-name').innerText = carta.nombre;
+        document.getElementById('card-desc').innerText = carta.desc;
+    }, 200);
+}
 
         // Función para rellenar la galería al cargar la página
         function cargarGaleria() {

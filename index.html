@@ -17,11 +17,54 @@
             margin: 0;
         }
 
-        /* SECCIÓN PRINCIPAL (CARTA ACTIVA) */
+        /* CONTENEDOR PRINCIPAL FLEX PARA ALINEAR IZQUIERDA Y DERECHA */
+        #main-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 80px;
+        }
+
         #game-container {
             text-align: center;
-            max-width: 500px;
-            margin-bottom: 80px; /* Espacio antes de la galería */
+            max-width: 450px;
+            width: 100%;
+        }
+
+        /* CUADRO DE ESTADÍSTICAS A LA DERECHA */
+        #stats-container {
+            background: #252525;
+            border: 2px solid #3c3c3c;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #stats-container h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .stat-line {
+            font-size: 1.1rem;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .stat-highlight {
+            font-weight: bold;
+            color: #ffbe0b;
         }
 
         .card-display {
@@ -53,9 +96,18 @@
         .SSR { background: #ffbe0b; color: black; }
         .UR { background: #ff006e; box-shadow: 0 0 15px #ff006e; }
 
+        /* CONTENEDOR DE BOTONES */
+        .botones-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
         button {
             padding: 15px 30px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             cursor: pointer;
             background-color: #4CAF50;
             color: white;
@@ -68,7 +120,26 @@
 
         button:hover { transform: scale(1.05); background-color: #45a049; }
 
-        /* --- SECCIÓN DE LA GALERÍA (FILAS DE 3) --- */
+        /* Botón secundario para ocultar carta */
+        .btn-hide {
+            background-color: #555;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn-hide:hover { background-color: #777; }
+
+        /* Botón secundario para reiniciar datos */
+        .btn-reset {
+            background-color: #d90429;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            margin-top: 15px;
+            box-shadow: none;
+            align-self: flex-start;
+        }
+        .btn-reset:hover { background-color: #b3001b; transform: none; }
+
+        /* --- SECCIÓN DE LA GALERÍA --- */
         .gallery-title {
             width: 100%;
             text-align: center;
@@ -79,7 +150,7 @@
 
         .grid-coleccion {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             max-width: 900px;
             width: 100%;
@@ -106,33 +177,49 @@
         .mini-card h4 { margin: 10px 0 5px 0; font-size: 1rem; }
         .mini-card p { font-size: 0.8rem; color: #bbb; margin: 0; }
 
-        /* Responsive para móviles: si la pantalla es pequeña, se pone en 1 o 2 columnas */
-        @media (max-width: 600px) {
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            #main-layout { flex-direction: column; align-items: center; }
             .grid-coleccion { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .grid-coleccion { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div id="game-container">
-        <div id="card-visual" class="card-display" style="background-image: url('cartas/reverso.png');"></div>
+    <div id="main-layout">
         
-        <div id="info-box" style="min-height: 150px;">
-            <div id="rarity" class="rarity-tag" style="display:none;"></div>
-            <h2 id="card-name" style="margin: 10px 0;">¿Listo para tu suerte?</h2>
-            <p id="card-desc" style="color: #ccc;">Pulsa el botón para revelar una carta.</p>
+        <div id="game-container">
+            <div id="card-visual" class="card-display" style="background-image: url('cartas/reverso.png');"></div>
+            
+            <div id="info-box" style="min-height: 150px;">
+                <div id="rarity" class="rarity-tag" style="display:none;"></div>
+                <h2 id="card-name" style="margin: 10px 0;">¿Listo para tu suerte?</h2>
+                <p id="card-desc" style="color: #ccc;">Pulsa el botón para revelar una carta.</p>
+            </div>
+
+            <div class="botones-container">
+                <button onclick="sacarCarta()">REVELAR CARTA</button>
+                <button class="btn-hide" onclick="ocultarCarta()">OCULTAR CARTA</button>
+            </div>
         </div>
 
-        <button onclick="sacarCarta()">REVELAR CARTA</button>
+        <div id="stats-container">
+            <h3>Estadísticas de la Carta</h3>
+            <div id="stats-content">
+                <p style="color: #aaa; font-style: italic;">Saca una carta para ver su contador global.</p>
+            </div>
+            <button class="btn-reset" onclick="reiniciarContadores()">Reiniciar Historial</button>
+        </div>
+
     </div>
 
     <h2 class="gallery-title">Colección Completa</h2>
-    <div class="grid-coleccion" id="galeria">
-        </div>
+    <div class="grid-coleccion" id="galeria"></div>
 
     <script>
-        // CONFIGURACIÓN DE TUS CARTAS
-        // Aquí es donde añades tus imágenes de GitHub y textos
         const cartas = [
             { nombre: "Uso Extra", rareza: "N", img: "cartas/N_UsoExtra.png", desc: "Puedes usar 1 objeto curativo adicional en un combate (además de los permitidos normalmente)." },
             { nombre: "Sin Mochila", rareza: "N", img: "cartas/N_SinMochila.png", desc: "En el próximo combate no puedes usar objetos consumibles." },
@@ -186,44 +273,99 @@
             { nombre: "Enfermera Estricta", rareza: "UR", img: "cartas/UR_Enfermeraestricta.png", desc: "Los Pokémon que participaron en tu último combate importante necesitan recuperarse de sus heridas. La enfermera los mantendrá en reposo y no podrás utilizarlos hasta que superes el próximo combate importante." },            
         ];
 
-        // Función para sacar carta aleatoria
         function sacarCarta() {
-    const visual = document.getElementById('card-visual');
-    visual.style.transform = "rotateY(90deg)"; 
+            const visual = document.getElementById('card-visual');
+            visual.style.transform = "rotateY(90deg)"; 
 
-    setTimeout(() => {
-        // 1. Generar un número del 1 al 100
-        const azar = Math.floor(Math.random() * 100) + 1;
-        let rarezaElegida;
+            setTimeout(() => {
+                const azar = Math.floor(Math.random() * 100) + 1;
+                let rarezaElegida;
 
-        // 2. Determinar rareza según el número (Rango total: 1 al 100)
-        if (azar <= 40) { rarezaElegida = "N"; }       // 40% de probabilidad (Del 1 al 40)
-        else if (azar <= 70) { rarezaElegida = "R"; }   // 30% de probabilidad (Del 41 al 70 -> 40 + 30)
-        else if (azar <= 85) { rarezaElegida = "SR"; }  // 15% de probabilidad (Del 71 al 85 -> 70 + 15)
-        else if (azar <= 95) { rarezaElegida = "SSR"; } // 10% de probabilidad (Del 86 al 95 -> 85 + 10)
-        else { rarezaElegida = "UR"; }                  // 5% de probabilidad  (Del 96 al 100 -> el resto)// 2. Determinar rareza según el número
+                if (azar <= 40) { rarezaElegida = "N"; }
+                else if (azar <= 70) { rarezaElegida = "R"; }
+                else if (azar <= 85) { rarezaElegida = "SR"; }
+                else if (azar <= 95) { rarezaElegida = "SSR"; }
+                else { rarezaElegida = "UR"; }
 
-        // 3. Filtrar todas las cartas que tengan esa rareza
-        const posiblesCartas = cartas.filter(c => c.rareza === rarezaElegida);
-        
-        // 4. Elegir una al azar de ese grupo (por si tienes varias N, varias R, etc.)
-        const carta = posiblesCartas[Math.floor(Math.random() * posiblesCartas.length)];
+                const posiblesCartas = cartas.filter(c => c.rareza === rarezaElegida);
+                const carta = posiblesCartas[Math.floor(Math.random() * posiblesCartas.length)];
 
-        // 5. Mostrar en pantalla (Igual que antes)
-        visual.style.backgroundImage = `url('${carta.img}')`;
-        visual.style.transform = "rotateY(0deg)";
-        
-        const rTag = document.getElementById('rarity');
-        rTag.innerText = carta.rareza;
-        rTag.className = `rarity-tag ${carta.rareza}`;
-        rTag.style.display = "inline-block";
-        
-        document.getElementById('card-name').innerText = carta.nombre;
-        document.getElementById('card-desc').innerText = carta.desc;
-    }, 200);
-}
+                // Local Storage Logic
+                let totalRobadas = parseInt(localStorage.getItem('gacha_total_robadas')) || 0;
+                let historialCartas = JSON.parse(localStorage.getItem('gacha_historial_cartas')) || {};
 
-        // Función para rellenar la galería al cargar la página
+                totalRobadas += 1;
+                historialCartas[carta.nombre] = (historialCartas[carta.nombre] || 0) + 1;
+
+                localStorage.setItem('gacha_total_robadas', totalRobadas);
+                localStorage.setItem('gacha_historial_cartas', JSON.stringify(historialCartas));
+
+                const vecesSalió = historialCartas[carta.nombre];
+                const porcentaje = ((vecesSalió / totalRobadas) * 100).toFixed(2);
+
+                // UI Update
+                visual.style.backgroundImage = `url('${carta.img}')`;
+                
+                setTimeout(() => {
+                    visual.style.transform = "rotateY(0deg)";
+                }, 50);
+                
+                const rTag = document.getElementById('rarity');
+                rTag.innerText = carta.rareza;
+                rTag.className = `rarity-tag ${carta.rareza}`;
+                rTag.style.display = "inline-block";
+                
+                document.getElementById('card-name').innerText = carta.nombre;
+                document.getElementById('card-desc').innerText = carta.desc;
+
+                document.getElementById('stats-content').innerHTML = `
+                    <div class="stat-line">Ha salido: <span class="stat-highlight">${vecesSalió} vez/veces</span></div>
+                    <div class="stat-line">De un total de: <span class="stat-highlight">${totalRobadas} cartas</span> robadas.</div>
+                    <div class="stat-line">Esta carta representa el <span class="stat-highlight">${porcentaje}%</span> de tus robos.</div>
+                `;
+
+            }, 200);
+        }
+
+        // --- NUEVA FUNCIÓN PARA OCULTAR LA CARTA ---
+        function ocultarCarta() {
+            const visual = document.getElementById('card-visual');
+            // Hacemos el efecto de girar la carta
+            visual.style.transform = "rotateY(90deg)"; 
+
+            setTimeout(() => {
+                // Restauramos el reverso
+                visual.style.backgroundImage = "url('cartas/reverso.png')";
+                
+                // Ocultamos la etiqueta de rareza
+                document.getElementById('rarity').style.display = "none";
+                
+                // Restauramos los textos por defecto
+                document.getElementById('card-name').innerText = "¿Listo para tu suerte?";
+                document.getElementById('card-desc').innerText = "Pulsa el botón para revelar una carta.";
+                
+                // Restauramos el cuadro de estadísticas
+                document.getElementById('stats-content').innerHTML = `
+                    <p style="color: #aaa; font-style: italic;">Saca una carta para ver su contador global.</p>
+                `;
+
+                // Devolvemos la carta a su posición original
+                setTimeout(() => {
+                    visual.style.transform = "rotateY(0deg)";
+                }, 50);
+            }, 200);
+        }
+
+        function reiniciarContadores() {
+            if (confirm("¿Seguro que quieres borrar todo el historial de robos?")) {
+                localStorage.removeItem('gacha_total_robadas');
+                localStorage.removeItem('gacha_historial_cartas');
+                document.getElementById('stats-content').innerHTML = `
+                    <p style="color: #aaa; font-style: italic;">Estadísticas reiniciadas. Saca una carta.</p>
+                `;
+            }
+        }
+
         function cargarGaleria() {
             const galeriaContainer = document.getElementById('galeria');
             
@@ -240,7 +382,6 @@
             });
         }
 
-        // Ejecutar carga de galería al iniciar
         window.onload = cargarGaleria;
     </script>
 </body>

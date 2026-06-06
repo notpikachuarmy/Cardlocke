@@ -196,12 +196,12 @@
         const azar = Math.floor(Math.random() * 100) + 1;
         let rarezaElegida;
 
-        // 2. Determinar rareza según el número
-        if (azar <= 30) { rarezaElegida = "N"; }        // 1 al 50
-        else if (azar <= 60) { rarezaElegida = "R"; }   // 51 al 80
-        else if (azar <= 80) { rarezaElegida = "SR"; }  // 81 al 94
-        else if (azar <= 95) { rarezaElegida = "SSR"; } // 95 al 99
-        else { rarezaElegida = "UR"; }                  // 100
+        // 2. Determinar rareza según el número (Rango total: 1 al 100)
+        if (azar <= 40) { rarezaElegida = "N"; }       // 40% de probabilidad (Del 1 al 40)
+        else if (azar <= 70) { rarezaElegida = "R"; }   // 30% de probabilidad (Del 41 al 70 -> 40 + 30)
+        else if (azar <= 85) { rarezaElegida = "SR"; }  // 15% de probabilidad (Del 71 al 85 -> 70 + 15)
+        else if (azar <= 95) { rarezaElegida = "SSR"; } // 10% de probabilidad (Del 86 al 95 -> 85 + 10)
+        else { rarezaElegida = "UR"; }                  // 5% de probabilidad  (Del 96 al 100 -> el resto)// 2. Determinar rareza según el número
 
         // 3. Filtrar todas las cartas que tengan esa rareza
         const posiblesCartas = cartas.filter(c => c.rareza === rarezaElegida);

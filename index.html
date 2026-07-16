@@ -1,388 +1,279 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gacha de Cartas - Colección</title>
-    <style>
-        /* FONDO Y GENERAL */
-        body {
-            background-color: #1a1a1a;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            margin: 0;
-        }
-
-        /* CONTENEDOR PRINCIPAL FLEX PARA ALINEAR IZQUIERDA Y DERECHA */
-        #main-layout {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            max-width: 900px;
-            width: 100%;
-            margin-bottom: 80px;
-        }
-
-        #game-container {
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-        }
-
-        /* CUADRO DE ESTADÍSTICAS A LA DERECHA */
-        #stats-container {
-            background: #252525;
-            border: 2px solid #3c3c3c;
-            border-radius: 15px;
-            padding: 25px;
-            max-width: 350px;
-            width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        #stats-container h3 {
-            margin-top: 0;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
-            color: #4CAF50;
-        }
-
-        .stat-line {
-            font-size: 1.1rem;
-            margin: 12px 0;
-            line-height: 1.5;
-        }
-
-        .stat-highlight {
-            font-weight: bold;
-            color: #ffbe0b;
-        }
-
-        .card-display {
-            width: 250px;
-            height: 350px;
-            margin: 20px auto;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            background-size: cover;
-            background-position: center;
-            background-color: #333;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 4px solid #444;
-        }
-
-        .rarity-tag {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        /* COLORES DE RAREZA */
-        .N { background: #888; }
-        .R { background: #3a86ff; }
-        .SR { background: #8338ec; }
-        .SSR { background: #ffbe0b; color: black; }
-        .UR { background: #ff006e; box-shadow: 0 0 15px #ff006e; }
-
-        /* CONTENEDOR DE BOTONES */
-        .botones-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        button:hover { transform: scale(1.05); background-color: #45a049; }
-
-        /* Botón secundario para ocultar carta */
-        .btn-hide {
-            background-color: #555;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .btn-hide:hover { background-color: #777; }
-
-        /* Botón secundario para reiniciar datos */
-        .btn-reset {
-            background-color: #d90429;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            border-radius: 5px;
-            margin-top: 15px;
-            box-shadow: none;
-            align-self: flex-start;
-        }
-        .btn-reset:hover { background-color: #b3001b; transform: none; }
-
-        /* --- SECCIÓN DE LA GALERÍA --- */
-        .gallery-title {
-            width: 100%;
-            text-align: center;
-            border-top: 1px solid #444;
-            padding-top: 40px;
-            margin-bottom: 30px;
-        }
-
-        .grid-coleccion {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .mini-card {
-            background: #252525;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #333;
-        }
-
-        .mini-img {
-            width: 100%;
-            aspect-ratio: 2/3;
-            background-color: #111;
-            border-radius: 8px;
-            background-size: cover;
-            background-position: center;
-            margin-bottom: 10px;
-        }
-
-        .mini-card h4 { margin: 10px 0 5px 0; font-size: 1rem; }
-        .mini-card p { font-size: 0.8rem; color: #bbb; margin: 0; }
-
-        /* Responsive para móviles */
-        @media (max-width: 768px) {
-            #main-layout { flex-direction: column; align-items: center; }
-            .grid-coleccion { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .grid-coleccion { grid-template-columns: 1fr; }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151719">
+  <meta name="description" content="Gestor de partidas Cardlocke con cartas, historial por run y estadísticas.">
+  <title>Cardlocke</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/icon-48.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Saltar al contenido</a>
 
-    <div id="main-layout">
-        
-        <div id="game-container">
-            <div id="card-visual" class="card-display" style="background-image: url('cartas/reverso.png');"></div>
-            
-            <div id="info-box" style="min-height: 150px;">
-                <div id="rarity" class="rarity-tag" style="display:none;"></div>
-                <h2 id="card-name" style="margin: 10px 0;">¿Listo para tu suerte?</h2>
-                <p id="card-desc" style="color: #ccc;">Pulsa el botón para revelar una carta.</p>
-            </div>
-
-            <div class="botones-container">
-                <button onclick="sacarCarta()">REVELAR CARTA</button>
-                <button class="btn-hide" onclick="ocultarCarta()">OCULTAR CARTA</button>
-            </div>
-        </div>
-
-        <div id="stats-container">
-            <h3>Estadísticas de la Carta</h3>
-            <div id="stats-content">
-                <p style="color: #aaa; font-style: italic;">Saca una carta para ver su contador global.</p>
-            </div>
-            <button class="btn-reset" onclick="reiniciarContadores()">Reiniciar Historial</button>
-        </div>
-
+  <header class="site-header">
+    <div class="brand">
+      <img src="assets/icons/icon-48.png" alt="" width="42" height="42">
+      <div>
+        <p class="eyebrow">GESTOR DE RUNS</p>
+        <h1>Cardlocke</h1>
+      </div>
     </div>
+    <nav class="header-actions" aria-label="Acciones principales">
+      <button id="install-app" class="button button-ghost button-small" type="button" hidden>Instalar app</button>
+      <button id="open-history" class="button button-ghost button-small" type="button">Historial</button>
+      <button id="open-backup" class="button button-ghost button-small" type="button">Datos</button>
+    </nav>
+  </header>
 
-    <h2 class="gallery-title">Colección Completa</h2>
-    <div class="grid-coleccion" id="galeria"></div>
+  <main id="main-content" class="page-shell">
+    <section class="run-strip" aria-labelledby="active-run-title">
+      <div class="run-status">
+        <span id="run-dot" class="status-dot" aria-hidden="true"></span>
+        <div>
+          <p class="eyebrow">LOCKE ACTIVO</p>
+          <h2 id="active-run-title">Ninguna partida activa</h2>
+          <p id="active-run-meta" class="muted">Empieza una partida para registrar tus robos por separado.</p>
+        </div>
+      </div>
+      <div id="run-progress-wrap" class="run-progress-wrap" hidden>
+        <div class="progress-label">
+          <span>Progreso</span>
+          <strong id="run-progress-text">0</strong>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span id="run-progress-bar"></span></div>
+      </div>
+      <div class="run-actions">
+        <button id="start-run" class="button button-primary" type="button">Empezar locke</button>
+        <button id="finish-run" class="button button-danger" type="button" hidden>Finalizar</button>
+      </div>
+    </section>
 
-    <script>
-        const cartas = [
-            { nombre: "Uso Extra", rareza: "N", img: "cartas/N_UsoExtra.png", desc: "Puedes usar 1 objeto curativo adicional en un combate (además de los permitidos normalmente)." },
-            { nombre: "Sin Mochila", rareza: "N", img: "cartas/N_SinMochila.png", desc: "En el próximo combate no puedes usar objetos consumibles." },
-            { nombre: "Explorador Hábil", rareza: "N", img: "cartas/NExploradorHábil.png", desc: "En la próxima ruta, puedes ignorar el primer encuentro y capturar el segundo que aparezca si no te gusta el primero." },
-            { nombre: "Voto de Silencio", rareza: "N", img: "cartas/NVotodeSilencio.png", desc: "El próximo movimiento que aprenda un Pokémon por nivel debe ser rechazado. Este solo se podrá obtener tras superar 1 gimnasio a posterior con recuerda movimientos." },
-            { nombre: "Sin Favoritos", rareza: "N", img: "cartas/NSinFavoritos.png", desc: "No puedes usar el Pokémon con más nivel de tu equipo para combatir contra entrenadores comunes en la siguiente ruta." },
-            { nombre: "Presupuesto Ajustado", rareza: "N", img: "cartas/N_PresupuestoAjustado.png", desc: "Hasta el próximo combate importante, solo puedes comprar un máximo de 5 objetos de cualquier tipo en las Tiendas Pokémon (Pokéballs, Pociones, etc. en total). " },  
-            { nombre: "Segundo Aliento", rareza: "R", img: "cartas/R_SegundoAliento.png", desc: "Si un Pokémon cae en el próximo combate, no muere, debe usarse antes de empezar el combate." },
-            { nombre: "Inicio Forzado", rareza: "R", img: "cartas/R_InicioForzado.png", desc: "El próximo combate debe empezarlo el primer Pokémon del equipo, aunque no quieras (puedes cambiar una vez que salga)." },
-            { nombre: "Scout de Ruta", rareza: "R", img: "cartas/RScoutdeRuta.png", desc: "En la próxima ruta, puedes caminar por la hierba hasta que aparezca el Pokémon que quieras, pero solo tienes tres oportunidades para capturarlo. Si falla, pierdes la ruta." },
-            { nombre: "Doble Encuentro", rareza: "R", img: "cartas/RDobleEncuentro.png", desc: "En la próxima ruta, captura a los dos primeros Pokémon que aparezcan. Te quedas con uno y el otro va a una caja de `reserva¨ con cada gimnasio se van cambiando entre reserva y activo." },
-            { nombre: "Torpeza Temporal", rareza: "R", img: "cartas/RTorpezaTemporal.png", desc: "No puedes usar objetos equipados (Bayas, Restos, etc.) en el próximo combate importante." },
-            { nombre: "Ley Seca", rareza: "R", img: "cartas/RLeySeca.png", desc: "No puedes usar ningún objeto curativo en el próximo combate de gimnasio/rival/alto mando/campeón." },
-            { nombre: "Voto de Pobreza", rareza: "R", img: "cartas/R_VotodePobreza.png", desc: "No puedes comprar nada en la Tienda hasta derrotar al próximo líder. " },  
-            { nombre: "Rutina de Ruta", rareza: "R", img: "cartas/R_Rutinaderuta.png", desc: "El Pokémon con el nivel más bajo de tu equipo debe salir al campo al menos un turno en todos los combates contra entrenadores de la próxima ruta." },
-            { nombre: "Talismán de Sellado", rareza: "R", img: "cartas/R_TalismandeSellado.png", desc: "Para los próximos 5 combates, tira un dado de 4 caras (o elige al azar). El slot de movimiento correspondiente queda bloqueado para todo tu equipo (no puedes cambiar el orden de movimientos)." },
-            { nombre: "Nigerundayo", rareza: "R", img: "cartas/R_Nigerundayo.png", desc: "Durante los próximos 5 combates, si tu Pokémon baja del 50% de vida y no está atrapado (ej: sombra trampa), debes cambiarlo obligatoriamente (hasta tener todos con menos del 50% no eres libre de jugar normalmente)." },
-            { nombre: "Pokémon Perezoso", rareza: "R", img: "cartas/R_PokemonPerezoso.png", desc: "Elige un Pokémon de tu equipo al azar. Se vuelve perezoso y va directo al PC, no podrás usarlo hasta que derrotes al próximo combate importante." },
-            { nombre: "Segunda Oportunidad", rareza: "SR", img: "cartas/SRSegundaOportunidad.png", desc: "Si fallas una captura (el Pokémon huye o lo debilitas), puedes intentar capturar otro en esa misma ruta." },
-            { nombre: "Reemplazo Legal", rareza: "SR", img: "cartas/SR_ReemplazoLegal.png", desc: "Puedes desechar la captura de una ruta y volver a capturar un Pokémon extra en la misma ruta." },
-            { nombre: "Destino Inapelable", rareza: "SR", img: "cartas/SR_DestinoInapelable.png", desc: "La próxima muerte es definitiva, el pokémon muerto no puede ser salvado por ninguna carta." },
-            { nombre: "Sabiduría del Anciano", rareza: "SR", img: "cartas/SRSabiduríadelAnciano.png", desc: "Permite saltar el límite de nivel por 2 niveles por encima del líder de gimnasio actual. (Si tu juego tiene level cap roba otra carta)." },
-            { nombre: "Objeto Prohibido", rareza: "SR", img: "cartas/SRObjetoProhibido.png", desc: "Elige un objeto clave (Poción Máx., Restos…): queda prohibido toda la run." },
-            { nombre: "Memoria Corta", rareza: "SR", img: "cartas/SRMemoriaCorta.png", desc: "Durante el próximo combate importante, no puedes usar el mismo movimiento dos veces seguidas con el mismo Pokémon." },
-            { nombre: "Prohibición de MT", rareza: "SR", img: "cartas/SRProhibicióndeMT.png", desc: "No puedes usar ninguna MT nueva en ningún Pokémon hasta después de ganar el próximo gimnasio. (En caso de liga Pokémon 2 altos mandos)." },
-            { nombre: "Migajas podridas", rareza: "SR", img: "cartas/SR_MigajasPodridas.png", desc: "Unas migajas podridas que envenenaron un pokemon tipo volador que tengas mandándolo a correos (elije al azar), si no tienes tipo voladores no hace nada." },
-            { nombre: "Movimiento Sellado", rareza: "SR", img: "cartas/SR_MovimientoSellado.png", desc: "Para el próximo combate importante, elije un slot de movimiento. El slot de movimiento correspondiente queda bloqueado para todo tu equipo (no puedes cambiar el orden de movimientos)." },
-            { nombre: "Repelente Natural", rareza: "SR", img: "cartas/SR_RepelenteNatural.png", desc: "No puedes capturar nada en la próxima ruta." },
-            { nombre: "Intercambio Permitido", rareza: "SSR", img: "cartas/SSR_IntercambioPermitido.png", desc: "Puedes cambiar un Pokémon muerto por otro de la caja y este último queda muerto para siempre (no puede revivir con ninguna carta)." },
-            { nombre: "Ruina Gradual", rareza: "SSR", img: "cartas/SSR_RuinaGradual.png", desc: "Durante el próximo gimnasio con cada combate con un súbdito pierde un espacio del equipo hasta ganar al líder. En caso de estar en liga pokémon esta carta elimina un espacio cada 2 altos mandos." },
-            { nombre: "Lazo de Sangre", rareza: "SSR", img: "cartas/SSRLazodeSangre.png", desc: "Elige dos Pokémon de tu equipo. Si uno de ellos va a morir, puedes decidir que el otro muera en su lugar, salvando al primero." },
-            { nombre: "Maestro de Captura", rareza: "SSR", img: "cartas/SSRMaestrodeCaptura.png", desc: "La siguiente captura desde la activación de la carta es garantizada. Puedes buscar tantos Pokémon de su especie hasta capturarlo si escapa o se debilita (el Pokémon es el primero de la especie que salga desde el fallo, no elegido por el usuario)." },
-            { nombre: "Último Bastión", rareza: "SSR", img: "cartas/SSRÚltimoBastión.png", desc: "Si un Pokémon cae debilitado en el próximo combate, no muere si consigues ganar el combate usando solo un Pokémon a partir de ese momento (un 1vsX)." },
-            { nombre: "Sacrificio Real", rareza: "SSR", img: "cartas/SSRSacrificioReal.png", desc: "Debes liberar un Pokémon de la caja o del equipo (tú eliges). Si atrapas algo antes de aplicar el efecto de esta carta no es valido para la misma en caso de ser un pokemon atado a otro libera ambos." },
-            { nombre: "Pánico Escénico", rareza: "SSR", img: "cartas/SSRPánicoEscénico.png", desc: "Durante el próximo combate importante (líder de gimnasio, rival alto manto, campeón), no puedes usar movimientos de estado (solo ataques que hagan daño directo)." },
-            { nombre: "Cansancio Crónico", rareza: "SSR", img: "cartas/SSR_CansancioCronico.png", desc: "Tras el próximo combate importante, todo tu equipo actual debe ir al PC y no podrá usarse durante toda la siguiente ruta." },
-            { nombre: "Evolución Interrumpida", rareza: "SSR", img: "cartas/SSR_EvolucionInterrumpida.png", desc: "Ningún Pokémon de tu equipo puede evolucionar hasta que derrotes al siguiente Líder de Gimnasio. (Debes pulsar 'B' o no usar piedras). " },
-            { nombre: "Camino sin Vuelta", rareza: "SSR", img: "cartas/SSR_CaminosinVuelta.png", desc: "Hasta ganar a todos los entrenadores de la próxima ruta no puedes salir de esta." },
-            { nombre: "Pokeball Codiciosa", rareza: "SSR", img: "cartas/SSR_PokeballCodiciosa.png", desc: "Permite capturar 2 pokemon en la ruta. (tiene que usarse antes del combate, no puede salirte el segundo y ya que te gusta usarla, en este caso seria el siguiente pokemon en salir)." },
-            { nombre: "Trato con el Diablo", rareza: "SSR", img: "cartas/SSR_TratoconelDiablo.png", desc: "Puedes atrapar a los próximos 3 primeros encuentros de tu ruta actual. A cambio, tienes prohibido capturar las siguientes 4 capturas que tengas." },
-            { nombre: "Concurso Cazabichos", rareza: "SSR", img: "cartas/SSR_ConcursoCazabichos.png", desc: "Atrapa los próximos 3 pokemon tipo bicho que salgan (no valen los ya capturados, pero si vale repetir mas de una vez el mismo de los no capturados) si estas en stream haz una encuesta para saber cual quedarte, alternativamente usa ruleta." },
-            { nombre: "Humolibur", rareza: "SSR", img: "cartas/SSR_Humolibur.png", desc: "Tira una ruleta con 5 opciones 4 humos y 1 excalibur, si sale humo no pasa nada, si sale excalibur puedes canjearlo como la carta N - R - SR que quieras." },
-            { nombre: "Ceniza de Ho-Oh", rareza: "UR", img: "cartas/UR_CenizadeHo-Oh.png", desc: "Puedes revivir 1 Pokémon muerto. Solo puede activarse una vez en toda la run. Si vuelve a salirte esta carta roba otra." },
-            { nombre: "Mano Vacía", rareza: "UR", img: "cartas/UR_ManoVacía.png", desc: "Descarta todas las cartas guardadas excepto una (la que tú elijas), esto afecta también a las cartas negativas activas." },
-            { nombre: "Inmunidad Diplomática", rareza: "UR", img: "cartas/URInmunidadDiplomática.png", desc: "Elige un tipo (ej. Agua). Durante el próximo combate, si uno de tus Pokémon muere por un movimiento de ese tipo no cuenta como muerte." },
-            { nombre: "Comodín de Ruta", rareza: "UR", img: "cartas/URComodíndeRuta.png", desc: "Puedes elegir CUALQUIER Pokémon que aparezca en la zona actual (no el primero) y capturarlo. La carta se activa de forma automática." },     
-            { nombre: "Equipo de Emergencia", rareza: "UR", img: "cartas/UREquipodeEmergencia.png", desc: "Para el próximo combate de gimnasio, debes dejar a tus Pokémon actuales en el  PC y sacar 6 Pokémon diferentes del mismo." },     
-            { nombre: "Apocalipsis de Caja", rareza: "UR", img: "cartas/URApocalipsisdeCaja.png", desc: "Debes liberar a la mitad de los Pokémon que tengas en el PC (en caso de ser un pokemon de doble encuentro, tendrás que liberar ambos) tira dados para decidir quiénes se van." },
-            { nombre: "Pánico al Cambio", rareza: "UR", img: "cartas/UR_PanicoalCambio.png", desc: "Durante el próximo combate importante, no puedes cambiar de Pokémon manualmente. Solo puedes cambiar si tu Pokémon actual muere o usa un movimiento de relevo (U-turn, Volt Switch)." },
-            { nombre: "Pelea Pareja", rareza: "UR", img: "cartas/UR_Peleapareja.png", desc: "No puedes usar pokemon cuyo tipo natural (no cuentan movimientos) tengan ventaja de tipo contra el rival (hasta ganar el próximo combate importante), puedes llevarlos en el equipo pero si sacan un charmander no puedes usarlos si tienes ventaja de tipo (ej: agua), salvo que no quede mas remedio por falta de tipos." },
-            { nombre: "Enfermera Estricta", rareza: "UR", img: "cartas/UR_Enfermeraestricta.png", desc: "Los Pokémon que participaron en tu último combate importante necesitan recuperarse de sus heridas. La enfermera los mantendrá en reposo y no podrás utilizarlos hasta que superes el próximo combate importante." },            
-        ];
+    <section class="dashboard" aria-label="Zona de robo y estadísticas">
+      <article class="draw-panel panel">
+        <div class="card-stage" aria-live="polite">
+          <div id="card-visual" class="card-visual is-hidden-card">
+            <img id="card-image" src="assets/cards/reverso.webp" alt="Reverso de una carta Cardlocke" width="774" height="1080">
+          </div>
+        </div>
 
-        function sacarCarta() {
-            const visual = document.getElementById('card-visual');
-            visual.style.transform = "rotateY(90deg)"; 
+        <div class="revealed-info">
+          <span id="rarity" class="rarity-badge" hidden></span>
+          <h2 id="card-name">¿Listo para tu suerte?</h2>
+          <p id="card-desc">Empieza un locke y pulsa el botón para revelar una carta.</p>
+        </div>
 
-            setTimeout(() => {
-                const azar = Math.floor(Math.random() * 100) + 1;
-                let rarezaElegida;
+        <div class="draw-actions">
+          <button id="draw-card" class="button button-primary button-large" type="button" disabled>
+            <span id="draw-label">Revelar carta</span>
+          </button>
+          <button id="hide-card" class="button button-secondary" type="button">Ocultar</button>
+          <button id="undo-draw" class="button button-ghost" type="button" disabled>Deshacer último</button>
+        </div>
+        <p class="keyboard-hint">Atajo: barra espaciadora para robar.</p>
+      </article>
 
-                if (azar <= 40) { rarezaElegida = "N"; }
-                else if (azar <= 70) { rarezaElegida = "R"; }
-                else if (azar <= 85) { rarezaElegida = "SR"; }
-                else if (azar <= 95) { rarezaElegida = "SSR"; }
-                else { rarezaElegida = "UR"; }
+      <aside class="side-stack">
+        <article class="panel stats-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">RESUMEN</p>
+              <h2>Estadísticas</h2>
+            </div>
+            <button id="view-current-history" class="text-button" type="button">Ver detalle</button>
+          </div>
+          <div class="stat-grid">
+            <div class="metric"><span>Esta run</span><strong id="run-draw-count">0</strong></div>
+            <div class="metric"><span>Global</span><strong id="global-draw-count">0</strong></div>
+            <div class="metric"><span>Únicas</span><strong id="unique-card-count">0</strong></div>
+            <div class="metric"><span>Más repetida</span><strong id="top-card-name">—</strong></div>
+          </div>
+          <div id="current-card-stats" class="current-card-stats">
+            <p class="muted">Aquí aparecerán las estadísticas de la carta revelada.</p>
+          </div>
+        </article>
 
-                const posiblesCartas = cartas.filter(c => c.rareza === rarezaElegida);
-                const carta = posiblesCartas[Math.floor(Math.random() * posiblesCartas.length)];
+        <article class="panel recent-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">ÚLTIMOS ROBOS</p>
+              <h2>Actividad reciente</h2>
+            </div>
+          </div>
+          <ol id="recent-draws" class="recent-list">
+            <li class="empty-state">Todavía no hay robos registrados.</li>
+          </ol>
+        </article>
+      </aside>
+    </section>
 
-                // Local Storage Logic
-                let totalRobadas = parseInt(localStorage.getItem('gacha_total_robadas')) || 0;
-                let historialCartas = JSON.parse(localStorage.getItem('gacha_historial_cartas')) || {};
+    <section class="collection-section" aria-labelledby="collection-title">
+      <div class="section-heading collection-heading">
+        <div>
+          <p class="eyebrow">50 CARTAS · N 40% · R 30% · SR 15% · SSR 10% · UR 5%</p>
+          <h2 id="collection-title">Colección completa</h2>
+          <p class="muted">Busca, filtra y consulta cuántas veces ha aparecido cada carta.</p>
+        </div>
+        <div class="collection-controls">
+          <label class="search-box">
+            <span class="sr-only">Buscar carta</span>
+            <input id="card-search" type="search" placeholder="Buscar carta o efecto…" autocomplete="off">
+          </label>
+          <select id="card-sort" aria-label="Ordenar colección">
+            <option value="rarity">Orden: rareza</option>
+            <option value="name">Orden: nombre</option>
+            <option value="draws">Orden: más robadas</option>
+          </select>
+        </div>
+      </div>
+      <div id="rarity-filters" class="filter-row" role="group" aria-label="Filtrar por rareza">
+        <button class="filter-chip is-active" type="button" data-rarity="ALL">Todas</button>
+        <button class="filter-chip" type="button" data-rarity="N">N</button>
+        <button class="filter-chip" type="button" data-rarity="R">R</button>
+        <button class="filter-chip" type="button" data-rarity="SR">SR</button>
+        <button class="filter-chip" type="button" data-rarity="SSR">SSR</button>
+        <button class="filter-chip" type="button" data-rarity="UR">UR</button>
+      </div>
+      <div id="gallery" class="card-grid"></div>
+      <p id="gallery-empty" class="empty-state large-empty" hidden>No hay cartas que coincidan con el filtro.</p>
+    </section>
+  </main>
 
-                totalRobadas += 1;
-                historialCartas[carta.nombre] = (historialCartas[carta.nombre] || 0) + 1;
+  <dialog id="start-run-dialog" class="modal small-modal">
+    <form id="start-run-form" method="dialog" class="modal-card">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">NUEVA PARTIDA</p>
+          <h2>Empezar un locke</h2>
+        </div>
+        <button class="icon-button close-dialog" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <label class="field">
+        <span>Nombre del locke</span>
+        <input id="run-name" name="run-name" maxlength="60" required placeholder="Ej. Esmeralda Kaizo">
+      </label>
+      <label class="field">
+        <span>Objetivo de cartas <small>(opcional)</small></span>
+        <input id="run-goal" name="run-goal" type="number" min="1" max="999" inputmode="numeric" placeholder="Ej. 20">
+        <small>Al llegar al objetivo te avisaremos para finalizar la partida.</small>
+      </label>
+      <div class="modal-actions">
+        <button class="button button-ghost close-dialog" type="button">Cancelar</button>
+        <button class="button button-primary" type="submit">Empezar</button>
+      </div>
+    </form>
+  </dialog>
 
-                localStorage.setItem('gacha_total_robadas', totalRobadas);
-                localStorage.setItem('gacha_historial_cartas', JSON.stringify(historialCartas));
+  <dialog id="finish-run-dialog" class="modal small-modal">
+    <form id="finish-run-form" method="dialog" class="modal-card">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">CERRAR PARTIDA</p>
+          <h2>Finalizar locke</h2>
+        </div>
+        <button class="icon-button close-dialog" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <p id="finish-run-summary" class="modal-copy"></p>
+      <label class="field">
+        <span>Nota final <small>(opcional)</small></span>
+        <textarea id="finish-run-note" rows="3" maxlength="300" placeholder="Resultado, equipo final, motivo…"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button class="button button-ghost close-dialog" type="button">Volver</button>
+        <button class="button button-danger" type="submit">Finalizar partida</button>
+      </div>
+    </form>
+  </dialog>
 
-                const vecesSalió = historialCartas[carta.nombre];
-                const porcentaje = ((vecesSalió / totalRobadas) * 100).toFixed(2);
+  <dialog id="history-dialog" class="modal wide-modal">
+    <div class="modal-card history-modal-card">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">REGISTRO COMPLETO</p>
+          <h2>Historial de Cardlocke</h2>
+        </div>
+        <button class="icon-button close-dialog" type="button" aria-label="Cerrar">×</button>
+      </div>
 
-                // UI Update
-                visual.style.backgroundImage = `url('${carta.img}')`;
-                
-                setTimeout(() => {
-                    visual.style.transform = "rotateY(0deg)";
-                }, 50);
-                
-                const rTag = document.getElementById('rarity');
-                rTag.innerText = carta.rareza;
-                rTag.className = `rarity-tag ${carta.rareza}`;
-                rTag.style.display = "inline-block";
-                
-                document.getElementById('card-name').innerText = carta.nombre;
-                document.getElementById('card-desc').innerText = carta.desc;
+      <div class="history-toolbar">
+        <label class="field inline-field">
+          <span>Vista</span>
+          <select id="history-scope"></select>
+        </label>
+        <label class="search-box history-search">
+          <span class="sr-only">Buscar en historial</span>
+          <input id="history-search" type="search" placeholder="Buscar carta, partida o nota…">
+        </label>
+      </div>
 
-                document.getElementById('stats-content').innerHTML = `
-                    <div class="stat-line">Ha salido: <span class="stat-highlight">${vecesSalió} vez/veces</span></div>
-                    <div class="stat-line">De un total de: <span class="stat-highlight">${totalRobadas} cartas</span> robadas.</div>
-                    <div class="stat-line">Esta carta representa el <span class="stat-highlight">${porcentaje}%</span> de tus robos.</div>
-                `;
+      <div id="history-summary" class="history-summary"></div>
+      <div class="table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Partida</th>
+              <th>Carta</th>
+              <th>Rareza</th>
+              <th>Estado</th>
+              <th>Nota</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+      <p id="history-empty" class="empty-state large-empty" hidden>No hay robos en esta vista.</p>
+      <div class="modal-actions spread-actions">
+        <button id="export-current-view" class="button button-secondary" type="button">Exportar vista CSV</button>
+        <button class="button button-primary close-dialog" type="button">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
 
-            }, 200);
-        }
+  <dialog id="backup-dialog" class="modal small-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">COPIAS DE SEGURIDAD</p>
+          <h2>Datos y privacidad</h2>
+        </div>
+        <button class="icon-button close-dialog" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <p class="modal-copy">Tus partidas se guardan únicamente en este navegador. Exporta una copia antes de borrar datos o cambiar de dispositivo.</p>
+      <div class="data-action-list">
+        <button id="export-data" class="button button-secondary" type="button">Exportar copia JSON</button>
+        <label class="button button-secondary file-button">
+          Importar copia JSON
+          <input id="import-data" type="file" accept="application/json,.json">
+        </label>
+        <button id="clear-data" class="button button-danger" type="button">Borrar todos los datos</button>
+      </div>
+      <div class="modal-actions">
+        <button class="button button-primary close-dialog" type="button">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
 
-        // --- NUEVA FUNCIÓN PARA OCULTAR LA CARTA ---
-        function ocultarCarta() {
-            const visual = document.getElementById('card-visual');
-            // Hacemos el efecto de girar la carta
-            visual.style.transform = "rotateY(90deg)"; 
+  <dialog id="card-dialog" class="modal card-modal">
+    <div class="modal-card card-detail-card">
+      <button class="icon-button close-dialog floating-close" type="button" aria-label="Cerrar">×</button>
+      <img id="detail-image" src="assets/cards/reverso.webp" alt="" width="774" height="1080">
+      <div class="card-detail-copy">
+        <span id="detail-rarity" class="rarity-badge"></span>
+        <h2 id="detail-name"></h2>
+        <p id="detail-description"></p>
+        <div id="detail-stats" class="detail-stats"></div>
+      </div>
+    </div>
+  </dialog>
 
-            setTimeout(() => {
-                // Restauramos el reverso
-                visual.style.backgroundImage = "url('cartas/reverso.png')";
-                
-                // Ocultamos la etiqueta de rareza
-                document.getElementById('rarity').style.display = "none";
-                
-                // Restauramos los textos por defecto
-                document.getElementById('card-name').innerText = "¿Listo para tu suerte?";
-                document.getElementById('card-desc').innerText = "Pulsa el botón para revelar una carta.";
-                
-                // Restauramos el cuadro de estadísticas
-                document.getElementById('stats-content').innerHTML = `
-                    <p style="color: #aaa; font-style: italic;">Saca una carta para ver su contador global.</p>
-                `;
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
 
-                // Devolvemos la carta a su posición original
-                setTimeout(() => {
-                    visual.style.transform = "rotateY(0deg)";
-                }, 50);
-            }, 200);
-        }
-
-        function reiniciarContadores() {
-            if (confirm("¿Seguro que quieres borrar todo el historial de robos?")) {
-                localStorage.removeItem('gacha_total_robadas');
-                localStorage.removeItem('gacha_historial_cartas');
-                document.getElementById('stats-content').innerHTML = `
-                    <p style="color: #aaa; font-style: italic;">Estadísticas reiniciadas. Saca una carta.</p>
-                `;
-            }
-        }
-
-        function cargarGaleria() {
-            const galeriaContainer = document.getElementById('galeria');
-            
-            cartas.forEach(carta => {
-                const div = document.createElement('div');
-                div.className = 'mini-card';
-                div.innerHTML = `
-                    <div class="mini-img" style="background-image: url('${carta.img}')"></div>
-                    <span class="rarity-tag ${carta.rareza}">${carta.rareza}</span>
-                    <h4>${carta.nombre}</h4>
-                    <p>${carta.desc}</p>
-                `;
-                galeriaContainer.appendChild(div);
-            });
-        }
-
-        window.onload = cargarGaleria;
-    </script>
+  <script src="js/cards.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
